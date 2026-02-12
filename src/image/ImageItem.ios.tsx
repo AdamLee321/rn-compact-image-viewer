@@ -15,7 +15,7 @@ import useImageDimensions from '../hooks/useImageDimensions';
 
 import { getImageStyles, getImageTransform } from '../utils';
 import { ImageSource, Dimensions } from './@types';
-import ImageLoading from '../ImageLoading';
+import ImageLoading from './ImageLoading';
 
 const SWIPE_CLOSE_OFFSET = 75;
 const SWIPE_CLOSE_VELOCITY = 1.55;
