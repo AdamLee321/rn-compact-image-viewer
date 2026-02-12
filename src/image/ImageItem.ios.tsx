@@ -17,14 +17,10 @@ import { getImageStyles, getImageTransform } from '../utils';
 import { ImageSource, Dimensions } from './@types';
 import ImageLoading from './ImageLoading';
 
-const SWIPE_CLOSE_OFFSET = 75;
-const SWIPE_CLOSE_VELOCITY = 1.55;
-
 type Props = {
   imageSrc: ImageSource;
   onRequestClose: () => void;
   onZoom: (scaled: boolean) => void;
-  swipeToCloseEnabled?: boolean;
   doubleTapToZoomEnabled?: boolean;
   layout: Dimensions;
 };
@@ -32,8 +28,6 @@ type Props = {
 const ImageItem = ({
   imageSrc,
   onZoom,
-  onRequestClose,
-  swipeToCloseEnabled = true,
   doubleTapToZoomEnabled = true,
   layout,
 }: Props) => {
@@ -62,35 +56,15 @@ const ImageItem = ({
 
   const onScrollEndDrag = useCallback(
     ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const velocityY = nativeEvent?.velocity?.y ?? 0;
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       const scaled = nativeEvent?.zoomScale > 1;
 
       onZoom(scaled);
       setScaled(scaled);
-
-      if (
-        !scaled &&
-        swipeToCloseEnabled &&
-        Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY
-      ) {
-        onRequestClose();
-      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [scaled]
   );
-
-  const onScroll = ({
-    nativeEvent,
-  }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetY = nativeEvent?.contentOffset?.y ?? 0;
-
-    if (nativeEvent?.zoomScale > 1) {
-      return;
-    }
-
-    scrollValueY.setValue(offsetY);
-  };
 
   const layoutStyle = React.useMemo(
     () => ({
@@ -113,12 +87,8 @@ const ImageItem = ({
         contentContainerStyle={{
           height: layout.height * 2,
         }}
-        scrollEnabled={swipeToCloseEnabled}
         onScrollEndDrag={onScrollEndDrag}
         scrollEventThrottle={1}
-        {...(swipeToCloseEnabled && {
-          onScroll,
-        })}
       >
         {(!loaded || !imageDimensions) && <ImageLoading style={layoutStyle} />}
         <TouchableWithoutFeedback

@@ -32,12 +32,10 @@ export type CompactImageViewerProps = FullScreenImageViewerProps & {
 export default function CompactImageViewer({
   imageSrc,
   visible,
-  onRequestClose,
   onLongPress,
   presentationStyle,
   animationType,
   backgroundColor,
-  swipeToCloseEnabled,
   doubleTapToZoomEnabled,
   delayLongPress,
   swipeCloseSensitivity,
@@ -112,12 +110,10 @@ export default function CompactImageViewer({
       <FullScreenImageViewer
         imageSrc={normalizedSrc}
         visible={visible}
-        onRequestClose={onRequestClose}
         onLongPress={onLongPress}
         presentationStyle={presentationStyle}
         animationType={animationType}
         backgroundColor={backgroundColor}
-        swipeToCloseEnabled={swipeToCloseEnabled}
         doubleTapToZoomEnabled={doubleTapToZoomEnabled}
         delayLongPress={delayLongPress}
         swipeCloseSensitivity={swipeCloseSensitivity}

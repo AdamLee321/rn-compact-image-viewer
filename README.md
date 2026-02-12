@@ -31,7 +31,6 @@ function Example() {
         visible={visible}
         onRequestClose={() => setVisible(false)}
         imageSrc={{ uri: 'https://picsum.photos/800/1200' }}
-        swipeToCloseEnabled
         doubleTapToZoomEnabled
         swipeCloseSensitivity={7}
       />
@@ -49,7 +48,6 @@ function Example() {
 - **presentationStyle?**: Modal presentation style.
 - **animationType?**: Modal animation type. Default: `"fade"`.
 - **backgroundColor?**: Background color. Default: `"#000"`.
-- **swipeToCloseEnabled?**: Enable vertical swipe-to-close.
 - **doubleTapToZoomEnabled?**: Enable double tap to zoom.
 - **delayLongPress?**: Long-press delay (ms). Default: `800`.
 - **swipeCloseSensitivity?**: 1 (hard) .. 10 (easy) velocity to close.

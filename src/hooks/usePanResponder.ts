@@ -8,7 +8,7 @@ import {
   PanResponderGestureState,
 } from 'react-native';
 
-import { Position, Dimensions } from '../types';
+import { Position, Dimensions } from '../@types';
 import {
   createPanResponder,
   getDistanceBetweenTouches,
@@ -25,6 +25,8 @@ type Props = {
   initialTranslate: Position;
   onZoom: (isZoomed: boolean) => void;
   doubleTapToZoomEnabled: boolean;
+  onLongPress: () => void;
+  delayLongPress: number;
   layout: Dimensions;
 };
 
@@ -33,10 +35,14 @@ const usePanResponder = ({
   initialTranslate,
   onZoom,
   doubleTapToZoomEnabled,
+  onLongPress,
+  delayLongPress,
   layout,
 }: Props): Readonly<
   [GestureResponderHandlers, Animated.Value, Animated.ValueXY]
 > => {
+  const MIN_DIMENSION = Math.min(layout.width, layout.height);
+
   let numberInitialTouches = 1;
   let initialTouches: NativeTouchEvent[] = [];
   let currentScale = initialScale;
@@ -45,7 +51,9 @@ const usePanResponder = ({
   let tmpTranslate: Position | null = null;
   let isDoubleTapPerformed = false;
   let lastTapTS: number | null = null;
+  let longPressHandlerRef: number | null = null;
 
+  const meaningfulShift = MIN_DIMENSION * 0.01;
   const scaleValue = new Animated.Value(initialScale);
   const translateValue = new Animated.ValueXY(initialTranslate);
 
@@ -103,8 +111,22 @@ const usePanResponder = ({
     return () => scaleValue.removeAllListeners();
   });
 
+  const cancelLongPressHandle = () => {
+    longPressHandlerRef && clearTimeout(longPressHandlerRef);
+  };
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handlers = {
+    onGrant: (
+      _: GestureResponderEvent,
+      gestureState: PanResponderGestureState
+    ) => {
+      numberInitialTouches = gestureState.numberActiveTouches;
+
+      if (gestureState.numberActiveTouches > 1) return;
+
+      longPressHandlerRef = setTimeout(onLongPress, delayLongPress);
+    },
     onStart: (
       event: GestureResponderEvent,
       gestureState: PanResponderGestureState
@@ -116,6 +138,7 @@ const usePanResponder = ({
 
       const tapTS = Date.now();
       // Handle double tap event by calculating diff between first and second taps timestamps
+
       isDoubleTapPerformed = Boolean(
         lastTapTS && tapTS - lastTapTS < DOUBLE_TAP_DELAY
       );
@@ -174,8 +197,17 @@ const usePanResponder = ({
       event: GestureResponderEvent,
       gestureState: PanResponderGestureState
     ) => {
+      const { dx, dy } = gestureState;
+
+      if (Math.abs(dx) >= meaningfulShift || Math.abs(dy) >= meaningfulShift) {
+        cancelLongPressHandle();
+      }
+
       // Don't need to handle move because double tap in progress (was handled in onStart)
-      if (doubleTapToZoomEnabled && isDoubleTapPerformed) return;
+      if (doubleTapToZoomEnabled && isDoubleTapPerformed) {
+        cancelLongPressHandle();
+        return;
+      }
 
       if (
         numberInitialTouches === 1 &&
@@ -191,6 +223,8 @@ const usePanResponder = ({
         numberInitialTouches === 2 && gestureState.numberActiveTouches === 2;
 
       if (isPinchGesture) {
+        cancelLongPressHandle();
+
         const initialDistance = getDistanceBetweenTouches(initialTouches);
         const currentDistance = getDistanceBetweenTouches(
           event.nativeEvent.touches
@@ -237,6 +271,7 @@ const usePanResponder = ({
 
       if (isTapGesture && currentScale > initialScale) {
         const { x, y } = currentTranslate;
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const { dx, dy } = gestureState;
         const [topBound, leftBound, bottomBound, rightBound] =
           getBounds(currentScale);
@@ -282,6 +317,8 @@ const usePanResponder = ({
       }
     },
     onRelease: () => {
+      cancelLongPressHandle();
+
       if (isDoubleTapPerformed) {
         isDoubleTapPerformed = false;
       }

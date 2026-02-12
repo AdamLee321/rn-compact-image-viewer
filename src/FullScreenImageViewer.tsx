@@ -25,7 +25,6 @@ export type Props = {
   presentationStyle?: ModalProps['presentationStyle'];
   animationType?: ModalProps['animationType'];
   backgroundColor?: string;
-  swipeToCloseEnabled?: boolean;
   doubleTapToZoomEnabled?: boolean;
   delayLongPress?: number;
   swipeCloseSensitivity?: number;
@@ -46,7 +45,6 @@ function ImageViewing({
   animationType = DEFAULT_ANIMATION_TYPE,
   backgroundColor = DEFAULT_BG_COLOR,
   presentationStyle,
-  swipeToCloseEnabled,
   doubleTapToZoomEnabled,
   delayLongPress = DEFAULT_DELAY_LONG_PRESS,
   swipeCloseSensitivity,
@@ -122,10 +120,8 @@ function ImageViewing({
         <ImageItem
           onZoom={() => {}}
           imageSrc={normalizedSrc}
-          onRequestClose={onRequestCloseEnhanced}
           onLongPress={onLongPress}
           delayLongPress={delayLongPress}
-          swipeToCloseEnabled={swipeToCloseEnabled}
           doubleTapToZoomEnabled={doubleTapToZoomEnabled}
           swipeCloseSensitivity={swipeCloseSensitivity}
           layout={layout}
