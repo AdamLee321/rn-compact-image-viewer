@@ -22,6 +22,9 @@ export type Props = {
   doubleTapToZoomEnabled?: boolean;
   delayLongPress?: number;
   swipeCloseSensitivity?: number;
+  actionIcon?: React.ReactNode;
+  actionButtonStyle?: StyleProp<ViewStyle>;
+  onActionPress?: () => void;
 };
 
 const DEFAULT_ANIMATION_TYPE = 'fade';
@@ -40,6 +43,9 @@ function ImageViewing({
   doubleTapToZoomEnabled,
   delayLongPress = DEFAULT_DELAY_LONG_PRESS,
   swipeCloseSensitivity,
+  actionIcon,
+  actionButtonStyle,
+  onActionPress,
 }: Props) {
   const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose);
   const [headerTransform] = useAnimatedComponents();
@@ -86,7 +92,12 @@ function ImageViewing({
             index,
           })}
         >
-          <ImageDefaultHeader onRequestClose={onRequestCloseEnhanced} />
+          <ImageDefaultHeader
+            onRequestClose={onRequestCloseEnhanced}
+            actionIcon={actionIcon}
+            onActionPress={onActionPress}
+            actionButtonStyle={actionButtonStyle}
+          />
         </Animated.View>
         <ImageItem
           onZoom={() => {}}

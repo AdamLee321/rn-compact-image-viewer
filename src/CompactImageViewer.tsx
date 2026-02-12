@@ -18,9 +18,14 @@ export type CompactImageViewerProps = FullScreenImageViewerProps & {
   compactHeight?: number;
   containerStyle?: StyleProp<ViewStyle>;
   imageStyle?: StyleProp<ImageStyle>;
-  fullscreenButtonStyle?: StyleProp<ViewStyle>;
   renderFullscreenButton?: () => React.ReactNode;
   onFullscreenPress?: () => void;
+  fullscreenButtonIcon?: React.ReactNode;
+  showActionButtonInCompact?: boolean;
+  actionButtonIconCompact?: React.ReactNode;
+  renderActionButtonCompact?: () => React.ReactNode;
+  compactButtonStyle?: StyleProp<ViewStyle>;
+  compactButtonsContainerStyle?: StyleProp<ViewStyle>;
 };
 
 export default function CompactImageViewer({
@@ -35,14 +40,20 @@ export default function CompactImageViewer({
   doubleTapToZoomEnabled,
   delayLongPress,
   swipeCloseSensitivity,
+  actionIcon,
+  actionButtonStyle,
+  onActionPress,
 
   // Compact-only props
   compactHeight = 200,
   containerStyle,
   imageStyle,
-  fullscreenButtonStyle,
   renderFullscreenButton,
   onFullscreenPress,
+  fullscreenButtonIcon,
+  showActionButtonInCompact = true,
+  compactButtonStyle,
+  compactButtonsContainerStyle,
 }: CompactImageViewerProps) {
   const normalizedSrc = useMemo(() => {
     return typeof imageSrc === 'string' ? { uri: imageSrc } : imageSrc;
@@ -51,6 +62,11 @@ export default function CompactImageViewer({
   const handleLongPress = useCallback(() => {
     onLongPress?.(normalizedSrc);
   }, [onLongPress, normalizedSrc]);
+
+  const showCompactAction =
+    showActionButtonInCompact &&
+    !!actionIcon &&
+    typeof onActionPress === 'function';
 
   return (
     <>
@@ -69,17 +85,27 @@ export default function CompactImageViewer({
           <Image source={normalizedSrc} style={[styles.image, imageStyle]} />
         </Pressable>
 
-        <Pressable
-          style={[styles.fullscreenBtn, fullscreenButtonStyle]}
-          onPress={onFullscreenPress}
-          hitSlop={10}
-        >
-          {renderFullscreenButton ? (
-            renderFullscreenButton()
-          ) : (
-            <View style={styles.defaultIconBox} />
+        <View style={[styles.compactButtonsRow, compactButtonsContainerStyle]}>
+          {showCompactAction && (
+            <Pressable
+              style={[styles.overlayBtn, compactButtonStyle]}
+              onPress={onActionPress}
+              hitSlop={10}
+            >
+              {actionIcon}
+            </Pressable>
           )}
-        </Pressable>
+
+          <Pressable
+            style={[styles.overlayBtn, compactButtonStyle]}
+            onPress={onFullscreenPress}
+            hitSlop={10}
+          >
+            {renderFullscreenButton
+              ? renderFullscreenButton()
+              : fullscreenButtonIcon ?? <View style={styles.defaultIconBox} />}
+          </Pressable>
+        </View>
       </View>
 
       <FullScreenImageViewer
@@ -94,25 +120,26 @@ export default function CompactImageViewer({
         doubleTapToZoomEnabled={doubleTapToZoomEnabled}
         delayLongPress={delayLongPress}
         swipeCloseSensitivity={swipeCloseSensitivity}
+        actionIcon={actionIcon}
+        actionButtonStyle={actionButtonStyle}
+        onActionPress={onActionPress}
       />
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  compactContainer: {
-    overflow: 'hidden',
-    width: '100%',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  fullscreenBtn: {
+  compactContainer: { overflow: 'hidden', width: '100%' },
+  image: { width: '100%', height: '100%', resizeMode: 'cover' },
+  compactButtonsRow: {
     position: 'absolute',
     top: 8,
     right: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  overlayBtn: {
+    marginLeft: 8,
     backgroundColor: 'rgba(0,0,0,0.6)',
     borderRadius: 20,
     padding: 8,
