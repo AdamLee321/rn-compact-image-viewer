@@ -6,9 +6,7 @@
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
-      "react-native": "./lib/module/index.js",
-      "types": "./lib/typescript/src/index.d.ts",
-      "default": "./lib/module/index.js"
+      "default": "./lib/typescript/src/index.d.ts"
     },
     "./package.json": "./package.json"
   },
