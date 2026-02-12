@@ -2,6 +2,7 @@
 import React, { useCallback, useMemo } from 'react';
 import {
   Image,
+  TouchableOpacity,
   Pressable,
   StyleSheet,
   View,
@@ -87,16 +88,16 @@ export default function CompactImageViewer({
 
         <View style={[styles.compactButtonsRow, compactButtonsContainerStyle]}>
           {showCompactAction && (
-            <Pressable
+            <TouchableOpacity
               style={[styles.overlayBtn, compactButtonStyle]}
               onPress={onActionPress}
               hitSlop={10}
             >
               {actionIcon}
-            </Pressable>
+            </TouchableOpacity>
           )}
 
-          <Pressable
+          <TouchableOpacity
             style={[styles.overlayBtn, compactButtonStyle]}
             onPress={onFullscreenPress}
             hitSlop={10}
@@ -104,7 +105,7 @@ export default function CompactImageViewer({
             {renderFullscreenButton
               ? renderFullscreenButton()
               : fullscreenButtonIcon ?? <View style={styles.defaultIconBox} />}
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
 
