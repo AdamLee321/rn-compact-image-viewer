@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { useState } from 'react';
 import { Animated, StyleSheet, View, ModalProps, Modal } from 'react-native';
 
 import ImageItem from './ImageItem';
@@ -42,7 +43,7 @@ function ImageViewing({
 }: Props) {
   const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose);
   const [headerTransform] = useAnimatedComponents();
-  const [layout, setLayout] = React.useState<Dimensions>({
+  const [layout, setLayout] = useState<Dimensions>({
     width: 0,
     height: 0,
   });
