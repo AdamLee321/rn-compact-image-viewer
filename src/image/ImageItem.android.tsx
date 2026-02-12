@@ -7,12 +7,11 @@ import {
   NativeSyntheticEvent,
 } from 'react-native';
 
-import useImageDimensions from '../hooks/useImageDimensions';
-import useZoomPanResponder from './hooks/useZoomPanResponder';
+import useImageDimensions from './hooks/useImageDimensions';
+import usePanResponder from './hooks/usePanResponder';
 
-import { getImageStyles, getImageTransform } from '../utils';
+import { getImageStyles, getImageTransform } from './utils';
 import { Dimensions, ImageSource } from './@types';
-
 import ImageLoading from './ImageLoading';
 
 const SWIPE_CLOSE_OFFSET = 75;
@@ -52,7 +51,7 @@ const ImageItem = ({
     }
   };
 
-  const [panHandlers, scaleValue, translateValue] = useZoomPanResponder({
+  const [panHandlers, scaleValue, translateValue] = usePanResponder({
     initialScale: scale || 1,
     initialTranslate: translate || { x: 0, y: 0 },
     onZoom: onZoomPerformed,
