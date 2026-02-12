@@ -141,8 +141,14 @@ const styles = StyleSheet.create({
   overlayBtn: {
     marginLeft: 8,
     backgroundColor: 'rgba(0,0,0,0.6)',
-    borderRadius: 20,
     padding: 8,
+    minWidth: 44,
+    minHeight: 44,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 999,
   },
   defaultIconBox: {
     width: 20,
