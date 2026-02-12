@@ -7,6 +7,7 @@ import {
   ModalProps,
   Modal,
   Platform,
+  StatusBar,
 } from 'react-native';
 
 import ImageItem from './image/ImageItem';
@@ -70,6 +71,9 @@ function ImageViewing({
   const isTransparent =
     Platform.OS === 'ios' && presentationStyle === 'overFullScreen';
 
+  const androidStatusBar =
+    Platform.OS === 'android' ? StatusBar.currentHeight ?? 20 : 0;
+
   return (
     <Modal
       transparent={isTransparent}
@@ -94,7 +98,14 @@ function ImageViewing({
         }}
       >
         <Animated.View
-          style={[styles.header, { transform: headerTransform }]}
+          style={[
+            styles.header,
+            // eslint-disable-next-line react-native/no-inline-styles
+            {
+              transform: headerTransform,
+              paddingTop: Platform.OS === 'android' ? androidStatusBar : 0,
+            },
+          ]}
           getItemLayout={(_, index) => ({
             length: layout.width,
             offset: layout.width * index,
