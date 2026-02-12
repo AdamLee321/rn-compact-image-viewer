@@ -16,8 +16,6 @@ import { getImageStyles, getImageTransform } from '../utils';
 import { ImageSource, Dimensions } from './@types';
 import ImageLoading from './ImageLoading';
 
-const SWIPE_CLOSE_OFFSET = 75;
-
 type Props = {
   imageSrc: ImageSource;
   onZoom: (isZoomed: boolean) => void;
@@ -38,7 +36,6 @@ const ImageItem = ({
   const imageContainer = useRef<ScrollView & NativeMethodsMixin>(null);
   const imageDimensions = useImageDimensions(imageSrc);
   const [translate, scale] = getImageTransform(imageDimensions, layout);
-  const scrollValueY = new Animated.Value(0);
   const [isLoaded, setLoadEnd] = useState(false);
 
   const onLoaded = useCallback(() => setLoadEnd(true), []);
@@ -74,11 +71,6 @@ const ImageItem = ({
     translateValue,
     scaleValue
   );
-  const imageOpacity = scrollValueY.interpolate({
-    inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
-    outputRange: [0.7, 1, 0.7],
-  });
-  const imageStylesWithOpacity = { ...imagesStyles, opacity: imageOpacity };
 
   useEffect(() => {
     if (imageContainer.current) {
@@ -111,7 +103,7 @@ const ImageItem = ({
       <Animated.Image
         {...panHandlers}
         source={imageSrc}
-        style={imageStylesWithOpacity}
+        style={imagesStyles}
         onLoad={onLoaded}
       />
       {(!isLoaded || !imageDimensions) && <ImageLoading />}

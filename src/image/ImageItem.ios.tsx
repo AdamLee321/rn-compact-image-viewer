@@ -38,21 +38,15 @@ const ImageItem = ({
   const handleDoubleTap = useDoubleTapToZoom(scrollViewRef, scaled, layout);
 
   const [translate, scale] = getImageTransform(imageDimensions, layout);
-  const scrollValueY = new Animated.Value(0);
   const scaleValue = new Animated.Value(scale || 1);
   const translateValue = new Animated.ValueXY(translate);
   const maxScale = scale && scale > 0 ? Math.max(1 / scale, 1) : 1;
 
-  const imageOpacity = scrollValueY.interpolate({
-    inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
-    outputRange: [0.5, 1, 0.5],
-  });
   const imagesStyles = getImageStyles(
     imageDimensions,
     translateValue,
     scaleValue
   );
-  const imageStylesWithOpacity = { ...imagesStyles, opacity: imageOpacity };
 
   const onScrollEndDrag = useCallback(
     ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -96,7 +90,7 @@ const ImageItem = ({
         >
           <Animated.Image
             source={imageSrc}
-            style={imageStylesWithOpacity}
+            style={imagesStyles}
             onLoad={() => setLoaded(true)}
           />
         </TouchableWithoutFeedback>
