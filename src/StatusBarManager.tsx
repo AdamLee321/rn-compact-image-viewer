@@ -1,22 +1,17 @@
 // @ts-nocheck
 import { useEffect } from 'react';
-import { Platform, ModalProps, StatusBar } from 'react-native';
+import { Platform, StatusBar } from 'react-native';
 
-const StatusBarManager = ({
-  presentationStyle,
-}: {
-  presentationStyle?: ModalProps['presentationStyle'];
-}) => {
-  if (Platform.OS === 'ios' || presentationStyle !== 'overFullScreen') {
-    return null;
-  }
+type Props = {
+  visible: boolean;
+};
 
-  StatusBar.setHidden(true);
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+const StatusBarManager = ({ visible }: Props) => {
   useEffect(() => {
-    return () => StatusBar.setHidden(false);
-  }, []);
+    if (Platform.OS !== 'android') return;
+    StatusBar.setHidden(visible, 'fade');
+    return () => StatusBar.setHidden(false, 'fade');
+  }, [visible]);
 
   return null;
 };

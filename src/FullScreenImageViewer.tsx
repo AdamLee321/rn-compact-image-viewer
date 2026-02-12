@@ -88,7 +88,10 @@ function ImageViewing({
       ]}
       hardwareAccelerated
     >
-      <StatusBarManager presentationStyle={presentationStyle} />
+      <StatusBarManager
+        presentationStyle={presentationStyle}
+        visible={visible}
+      />
       <View
         style={[styles.container, { opacity, backgroundColor }]}
         onLayout={(e) => {
