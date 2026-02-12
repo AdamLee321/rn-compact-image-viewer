@@ -7,7 +7,6 @@ import {
   ModalProps,
   Modal,
   Platform,
-  StatusBar,
 } from 'react-native';
 
 import ImageItem from './image/ImageItem';
@@ -79,9 +78,6 @@ function ImageViewing({
       presentationStyle={presentationStyle}
       animationType={animationType}
       onRequestClose={onRequestCloseEnhanced}
-      onShow={() => {
-        if (Platform.OS === 'android') StatusBar.setHidden(true, 'fade');
-      }}
       supportedOrientations={[
         'portrait',
         'portrait-upside-down',
