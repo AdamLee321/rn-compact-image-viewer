@@ -74,7 +74,8 @@ const ImageItem = ({
         ref={scrollViewRef}
         style={layoutStyle}
         pinchGestureEnabled
-        nestedScrollEnabled={true}
+        scrollEnabled={false}
+        nestedScrollEnabled={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         maximumZoomScale={maxScale}

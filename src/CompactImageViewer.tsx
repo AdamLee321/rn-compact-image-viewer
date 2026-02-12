@@ -32,6 +32,7 @@ export type CompactImageViewerProps = FullScreenImageViewerProps & {
 export default function CompactImageViewer({
   imageSrc,
   visible,
+  onRequestClose,
   onLongPress,
   presentationStyle,
   animationType,
@@ -110,6 +111,7 @@ export default function CompactImageViewer({
       <FullScreenImageViewer
         imageSrc={normalizedSrc}
         visible={visible}
+        onRequestClose={onRequestClose}
         onLongPress={onLongPress}
         presentationStyle={presentationStyle}
         animationType={animationType}
