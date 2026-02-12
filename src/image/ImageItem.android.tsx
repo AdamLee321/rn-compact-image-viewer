@@ -7,12 +7,12 @@ import {
   NativeSyntheticEvent,
 } from 'react-native';
 
-import useImageDimensions from './hooks/useImageDimensions';
+import useImageDimensions from '../hooks/useImageDimensions';
 import useZoomPanResponder from './hooks/useZoomPanResponder';
 
-import { getImageStyles, getImageTransform } from './utils';
+import { getImageStyles, getImageTransform } from '../utils';
 import { Dimensions, ImageSource } from './@types';
-import ImageLoading from './ImageLoading';
+import ImageLoading from '../ImageLoading';
 
 const SWIPE_CLOSE_OFFSET = 75;
 const SWIPE_CLOSE_VELOCITY = 1.75;

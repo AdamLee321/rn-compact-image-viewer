@@ -2,8 +2,8 @@
 import { useState } from 'react';
 import { Animated, StyleSheet, View, ModalProps, Modal } from 'react-native';
 
-import ImageItem from './ImageItem';
-import ImageDefaultHeader from './ImageDefaultHeader';
+import ImageItem from './image/ImageItem';
+import ImageDefaultHeader from './image/ImageDefaultHeader';
 import StatusBarManager from './StatusBarManager';
 
 import useAnimatedComponents from './hooks/useAnimatedComponents';
