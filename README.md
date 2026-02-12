@@ -1,37 +1,74 @@
-# rn-compact-image-viewer
+# Full Screen Image Viewer (React Native)
 
-Image viewer library to display fullscreen and compact images
+Lightweight full-screen image viewer with pinch/double-tap zoom and swipe-to-close for React Native.
 
 ## Installation
 
-
-```sh
+```bash
 npm install rn-compact-image-viewer
+# or
+yarn add rn-compact-image-viewer
 ```
 
+### Peer dependencies
 
-## Usage
+- react: >=18
+- react-native: >=0.72
 
+## Quick start
 
-```js
-import { multiply } from 'rn-compact-image-viewer';
+```tsx
+import { useState } from 'react';
+import { Button } from 'react-native';
+import { FullScreenImageViewer } from 'rn-compact-image-viewer';
 
-// ...
-
-const result = await multiply(3, 7);
+function Example() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button title="Open" onPress={() => setVisible(true)} />
+      <FullScreenImageViewer
+        visible={visible}
+        onRequestClose={() => setVisible(false)}
+        imageSrc={{ uri: 'https://picsum.photos/800/1200' }}
+        swipeToCloseEnabled
+        doubleTapToZoomEnabled
+        swipeCloseSensitivity={7}
+      />
+    </>
+  );
+}
 ```
 
+## Props
 
-## Contributing
+- **imageSrc**: Image source.
+- **visible**: Controls modal visibility.
+- **onRequestClose**: Called to close viewer.
+- **onLongPress?**: Long-press callback.
+- **presentationStyle?**: Modal presentation style.
+- **animationType?**: Modal animation type. Default: `"fade"`.
+- **backgroundColor?**: Background color. Default: `"#000"`.
+- **swipeToCloseEnabled?**: Enable vertical swipe-to-close.
+- **doubleTapToZoomEnabled?**: Enable double tap to zoom.
+- **delayLongPress?**: Long-press delay (ms). Default: `800`.
+- **swipeCloseSensitivity?**: 1 (hard) .. 10 (easy) velocity to close.
+- **supportOrientations?**: Model supported orientations `["portrait", "landscape"]`. Default `["portrait"]`.
 
-- [Development workflow](CONTRIBUTING.md#development-workflow)
-- [Sending a pull request](CONTRIBUTING.md#sending-a-pull-request)
-- [Code of conduct](CODE_OF_CONDUCT.md)
+## TypeScript
+
+Type definitions are included. Import types as needed:
+
+```ts
+import type { FullScreenImageViewerProps } from 'rn-compact-image-viewer';
+```
 
 ## License
 
 MIT
 
----
+## Links
 
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+- Credit: https://github.com/imranshad/rn-full-screen-image-viewer
+- Repository: https://github.com/adamlee321/rn-full-screen-image-viewer
+- Issues: https://github.com/adamlee321/rn-full-screen-image-viewer/issues

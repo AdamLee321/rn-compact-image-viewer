@@ -1,20 +1,20 @@
-import { Text, View, StyleSheet } from 'react-native';
-import { multiply } from 'rn-compact-image-viewer';
+import { useState } from 'react';
+import { Button } from 'react-native';
+import { FullScreenImageViewer } from 'rn-compact-image-viewer';
 
-const result = multiply(3, 7);
-
-export default function App() {
+export function App() {
+  const [visible, setVisible] = useState(false);
   return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
+    <>
+      <Button title="Open" onPress={() => setVisible(true)} />
+      <FullScreenImageViewer
+        visible={visible}
+        onRequestClose={() => setVisible(false)}
+        imageSrc={{ uri: 'https://picsum.photos/800/1200' }}
+        swipeToCloseEnabled
+        doubleTapToZoomEnabled
+        swipeCloseSensitivity={7}
+      />
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
