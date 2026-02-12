@@ -33,7 +33,6 @@ function useDoubleTapToZoom(
         let targetHeight = screen.height;
 
         // Zooming in
-        // TODO: Add more precise calculation of targetX, targetY based on touch
         if (!scaled) {
           targetX = pageX / 2;
           targetY = pageY / 2;
