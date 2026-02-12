@@ -46,7 +46,7 @@ export default function CompactImageViewer({
   onActionPress,
 
   // Compact-only props
-  compactHeight = 200,
+  compactHeight = 250,
   containerStyle,
   imageStyle,
   renderFullscreenButton,

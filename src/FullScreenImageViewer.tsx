@@ -1,6 +1,13 @@
 // @ts-nocheck
 import { useState } from 'react';
-import { Animated, StyleSheet, View, ModalProps, Modal } from 'react-native';
+import {
+  Animated,
+  StyleSheet,
+  View,
+  ModalProps,
+  Modal,
+  Platform,
+} from 'react-native';
 
 import ImageItem from './image/ImageItem';
 import ImageDefaultHeader from './image/ImageDefaultHeader';
@@ -61,9 +68,13 @@ function ImageViewing({
   const normalizedSrc =
     typeof imageSrc === 'string' ? { uri: imageSrc } : imageSrc;
 
+  const isTransparent =
+    Platform.OS === 'ios' && presentationStyle === 'overFullScreen';
+
   return (
     <Modal
-      transparent={presentationStyle === 'overFullScreen'}
+      transparent={isTransparent}
+      statusBarTranslucent={true}
       visible={visible}
       presentationStyle={presentationStyle}
       animationType={animationType}
