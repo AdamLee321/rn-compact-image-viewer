@@ -96,6 +96,7 @@ const ImageItem = ({
       ref={imageContainer}
       style={dynamicStyles.listItem}
       scrollEnabled={false}
+      nestedScrollEnabled={false}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={dynamicStyles.imageScrollContainer}
