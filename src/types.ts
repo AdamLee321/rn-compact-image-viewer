@@ -1,5 +1,6 @@
 // @ts-nocheck
-import { ImageURISource, ImageRequireSource } from 'react-native';
+
+import type { ImageSourcePropType } from 'react-native';
 
 export type Dimensions = {
   width: number;
@@ -11,4 +12,4 @@ export type Position = {
   y: number;
 };
 
-export type ImageSource = ImageURISource | ImageRequireSource;
+export type ImageSource = ImageSourcePropType;
