@@ -7,10 +7,10 @@ import {
   NativeSyntheticEvent,
 } from 'react-native';
 
-import useImageDimensions from './hooks/useImageDimensions';
-import usePanResponder from './hooks/usePanResponder';
+import useImageDimensions from '../hooks/useImageDimensions';
+import usePanResponder from '../hooks/usePanResponder';
 
-import { getImageStyles, getImageTransform } from './utils';
+import { getImageStyles, getImageTransform } from '../utils';
 import { Dimensions, ImageSource } from './@types';
 import ImageLoading from './ImageLoading';
 
