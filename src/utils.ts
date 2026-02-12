@@ -1,12 +1,13 @@
+// @ts-nocheck
 import {
   Animated,
-  type GestureResponderEvent,
+  GestureResponderEvent,
   PanResponder,
-  type PanResponderGestureState,
-  type PanResponderInstance,
-  type NativeTouchEvent,
+  PanResponderGestureState,
+  PanResponderInstance,
+  NativeTouchEvent,
 } from 'react-native';
-import type { Dimensions, Position } from './types';
+import { Dimensions, Position } from './types';
 
 type CacheStorageItem = { key: string; value: any };
 

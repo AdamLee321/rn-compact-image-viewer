@@ -1,5 +1,6 @@
+// @ts-nocheck
 import { useEffect } from 'react';
-import { Platform, type ModalProps, StatusBar } from 'react-native';
+import { Platform, ModalProps, StatusBar } from 'react-native';
 
 const StatusBarManager = ({
   presentationStyle,

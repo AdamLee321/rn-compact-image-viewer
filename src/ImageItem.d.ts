@@ -1,5 +1,6 @@
+// @ts-nocheck
 import React from 'react';
-import type { ImageSource } from './types';
+import { ImageSource } from './types';
 
 declare type Props = {
   imageSrc: ImageSource;

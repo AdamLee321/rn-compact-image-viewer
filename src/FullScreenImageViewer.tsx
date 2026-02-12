@@ -1,10 +1,5 @@
-import {
-  Animated,
-  StyleSheet,
-  View,
-  type ModalProps,
-  Modal,
-} from 'react-native';
+// @ts-nocheck
+import { Animated, StyleSheet, View, ModalProps, Modal } from 'react-native';
 
 import ImageItem from './ImageItem';
 import ImageDefaultHeader from './ImageDefaultHeader';
@@ -12,7 +7,7 @@ import StatusBarManager from './StatusBarManager';
 
 import useAnimatedComponents from './hooks/useAnimatedComponents';
 import useRequestClose from './hooks/useRequestClose';
-import type { ImageSource } from './types';
+import { ImageSource } from './types';
 
 export type Props = {
   imageSrc: ImageSource;

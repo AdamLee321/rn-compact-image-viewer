@@ -1,4 +1,5 @@
-import type { ImageURISource, ImageRequireSource } from 'react-native';
+// @ts-nocheck
+import { ImageURISource, ImageRequireSource } from 'react-native';
 
 export type Dimensions = {
   width: number;

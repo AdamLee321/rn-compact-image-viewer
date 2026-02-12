@@ -7,8 +7,8 @@ import {
   ScrollView,
   StyleSheet,
   View,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   TouchableWithoutFeedback,
 } from 'react-native';
 
@@ -16,7 +16,7 @@ import useDoubleTapToZoom from './hooks/useDoubleTapToZoom';
 import useImageDimensions from './hooks/useImageDimensions';
 
 import { getImageStyles, getImageTransform } from './utils';
-import type { ImageSource } from './types';
+import { ImageSource } from './types';
 import { ImageLoading } from './ImageLoading';
 
 const SWIPE_CLOSE_OFFSET = 75;

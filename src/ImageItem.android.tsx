@@ -6,16 +6,16 @@ import {
   ScrollView,
   Dimensions,
   StyleSheet,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
-  type NativeMethodsMixin,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  NativeMethodsMixin,
 } from 'react-native';
 
 import useImageDimensions from './hooks/useImageDimensions';
 import usePanResponder from './hooks/usePanResponder';
 
 import { getImageStyles, getImageTransform } from './utils';
-import type { ImageSource } from './types';
+import { ImageSource } from './types';
 import { ImageLoading } from './ImageLoading';
 
 const SWIPE_CLOSE_OFFSET = 75;
