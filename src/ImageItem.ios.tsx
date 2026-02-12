@@ -126,9 +126,6 @@ export const ImageItem = ({
     onLongPress(imageSrc);
   }, [imageSrc, onLongPress]);
 
-  const normalizedSrc =
-    typeof imageSrc === 'string' ? { uri: imageSrc } : imageSrc;
-
   return (
     <View>
       <ScrollView
@@ -153,7 +150,7 @@ export const ImageItem = ({
           delayLongPress={delayLongPress}
         >
           <Animated.Image
-            source={normalizedSrc}
+            source={imageSrc}
             style={imageStylesWithOpacity}
             onLoad={() => setLoaded(true)}
           />

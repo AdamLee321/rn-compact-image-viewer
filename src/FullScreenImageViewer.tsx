@@ -47,6 +47,9 @@ function ImageViewing({
     return null;
   }
 
+  const normalizedSrc =
+    typeof imageSrc === 'string' ? { uri: imageSrc } : imageSrc;
+
   return (
     <Modal
       transparent={presentationStyle === 'overFullScreen'}
@@ -64,7 +67,7 @@ function ImageViewing({
         </Animated.View>
         <ImageItem
           onZoom={() => {}}
-          imageSrc={imageSrc}
+          imageSrc={normalizedSrc}
           onRequestClose={onRequestCloseEnhanced}
           onLongPress={onLongPress}
           delayLongPress={delayLongPress}
