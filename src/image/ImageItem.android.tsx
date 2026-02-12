@@ -5,10 +5,9 @@ import React, {
   useState,
   useMemo,
   useEffect,
-  View,
 } from 'react';
 
-import { Animated, ScrollView, NativeMethodsMixin } from 'react-native';
+import { Animated, View, NativeMethodsMixin } from 'react-native';
 
 import useImageDimensions from '../hooks/useImageDimensions';
 import usePanResponder from '../hooks/usePanResponder';
