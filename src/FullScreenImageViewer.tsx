@@ -27,7 +27,6 @@ export type Props = {
   backgroundColor?: string;
   doubleTapToZoomEnabled?: boolean;
   delayLongPress?: number;
-  swipeCloseSensitivity?: number;
   actionIcon?: React.ReactNode;
   actionButtonStyle?: StyleProp<ViewStyle>;
   onActionPress?: () => void;
@@ -47,7 +46,6 @@ function ImageViewing({
   presentationStyle,
   doubleTapToZoomEnabled,
   delayLongPress = DEFAULT_DELAY_LONG_PRESS,
-  swipeCloseSensitivity,
   actionIcon,
   actionButtonStyle,
   onActionPress,
@@ -123,7 +121,6 @@ function ImageViewing({
           onLongPress={onLongPress}
           delayLongPress={delayLongPress}
           doubleTapToZoomEnabled={doubleTapToZoomEnabled}
-          swipeCloseSensitivity={swipeCloseSensitivity}
           layout={layout}
         />
       </View>

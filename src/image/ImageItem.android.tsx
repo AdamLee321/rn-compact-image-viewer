@@ -5,6 +5,7 @@ import React, {
   useState,
   useMemo,
   useEffect,
+  View,
 } from 'react';
 
 import { Animated, ScrollView, NativeMethodsMixin } from 'react-native';
@@ -78,29 +79,13 @@ const ImageItem = ({
     }
   }, [layout.width, layout.height]);
 
-  const dynamicStyles = useMemo(
-    () => ({
-      listItem: {
-        width: layout.width,
-        height: layout.height,
-      },
-      imageScrollContainer: {
-        height: layout.height * 2,
-      },
-    }),
+  const containerStyle = useMemo(
+    () => ({ width: layout.width, height: layout.height }),
     [layout.width, layout.height]
   );
 
   return (
-    <ScrollView
-      ref={imageContainer}
-      style={dynamicStyles.listItem}
-      scrollEnabled={false}
-      nestedScrollEnabled={false}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={dynamicStyles.imageScrollContainer}
-    >
+    <View style={containerStyle}>
       <Animated.Image
         {...panHandlers}
         source={imageSrc}
@@ -108,7 +93,7 @@ const ImageItem = ({
         onLoad={onLoaded}
       />
       {(!isLoaded || !imageDimensions) && <ImageLoading />}
-    </ScrollView>
+    </View>
   );
 };
 

@@ -32,7 +32,6 @@ function Example() {
         onRequestClose={() => setVisible(false)}
         imageSrc={{ uri: 'https://picsum.photos/800/1200' }}
         doubleTapToZoomEnabled
-        swipeCloseSensitivity={7}
       />
     </>
   );
@@ -50,7 +49,6 @@ function Example() {
 - **backgroundColor?**: Background color. Default: `"#000"`.
 - **doubleTapToZoomEnabled?**: Enable double tap to zoom.
 - **delayLongPress?**: Long-press delay (ms). Default: `800`.
-- **swipeCloseSensitivity?**: 1 (hard) .. 10 (easy) velocity to close.
 - **supportOrientations?**: Model supported orientations `["portrait", "landscape"]`. Default `["portrait"]`.
 
 ## TypeScript
