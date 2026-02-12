@@ -2,25 +2,19 @@
 import { useMemo, useEffect } from 'react';
 import {
   Animated,
-  Dimensions,
-  type GestureResponderEvent,
-  type GestureResponderHandlers,
-  type NativeTouchEvent,
-  type PanResponderGestureState,
+  GestureResponderEvent,
+  GestureResponderHandlers,
+  NativeTouchEvent,
+  PanResponderGestureState,
 } from 'react-native';
 
-import type { Position } from '../types';
+import { Position, Dimensions } from '../types';
 import {
   createPanResponder,
   getDistanceBetweenTouches,
   getImageTranslate,
   getImageDimensionsByTranslate,
 } from '../utils';
-
-const SCREEN = Dimensions.get('window');
-const SCREEN_WIDTH = SCREEN.width;
-const SCREEN_HEIGHT = SCREEN.height;
-const MIN_DIMENSION = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 const SCALE_MAX = 2;
 const DOUBLE_TAP_DELAY = 300;
@@ -31,8 +25,7 @@ type Props = {
   initialTranslate: Position;
   onZoom: (isZoomed: boolean) => void;
   doubleTapToZoomEnabled: boolean;
-  onLongPress: () => void;
-  delayLongPress: number;
+  layout: Dimensions;
 };
 
 const usePanResponder = ({
@@ -40,8 +33,7 @@ const usePanResponder = ({
   initialTranslate,
   onZoom,
   doubleTapToZoomEnabled,
-  onLongPress,
-  delayLongPress,
+  layout,
 }: Props): Readonly<
   [GestureResponderHandlers, Animated.Value, Animated.ValueXY]
 > => {
@@ -53,15 +45,13 @@ const usePanResponder = ({
   let tmpTranslate: Position | null = null;
   let isDoubleTapPerformed = false;
   let lastTapTS: number | null = null;
-  let longPressHandlerRef: ReturnType<typeof setTimeout> | null = null;
 
-  const meaningfulShift = MIN_DIMENSION * 0.01;
   const scaleValue = new Animated.Value(initialScale);
   const translateValue = new Animated.ValueXY(initialTranslate);
 
   const imageDimensions = getImageDimensionsByTranslate(
     initialTranslate,
-    SCREEN
+    layout
   );
 
   const getBounds = (scale: number) => {
@@ -69,12 +59,12 @@ const usePanResponder = ({
       width: imageDimensions.width * scale,
       height: imageDimensions.height * scale,
     };
-    const translateDelta = getImageTranslate(scaledImageDimensions, SCREEN);
+    const translateDelta = getImageTranslate(scaledImageDimensions, layout);
 
     const left = initialTranslate.x - translateDelta.x;
-    const right = left - (scaledImageDimensions.width - SCREEN.width);
+    const right = left - (scaledImageDimensions.width - layout.width);
     const top = initialTranslate.y - translateDelta.y;
-    const bottom = top - (scaledImageDimensions.height - SCREEN.height);
+    const bottom = top - (scaledImageDimensions.height - layout.height);
 
     return [top, left, bottom, right];
   };
@@ -99,37 +89,22 @@ const usePanResponder = ({
   };
 
   const fitsScreenByWidth = () =>
-    imageDimensions.width * currentScale < SCREEN_WIDTH;
+    imageDimensions.width * currentScale < layout.width;
   const fitsScreenByHeight = () =>
-    imageDimensions.height * currentScale < SCREEN_HEIGHT;
+    imageDimensions.height * currentScale < layout.height;
 
   useEffect(() => {
-    const EPSILON = 0.02;
     scaleValue.addListener(({ value }) => {
       if (typeof onZoom === 'function') {
-        onZoom(Math.abs(value - initialScale) > EPSILON);
+        onZoom(value !== initialScale);
       }
     });
 
     return () => scaleValue.removeAllListeners();
   });
 
-  const cancelLongPressHandle = () => {
-    longPressHandlerRef && clearTimeout(longPressHandlerRef);
-  };
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handlers = {
-    onGrant: (
-      _: GestureResponderEvent,
-      gestureState: PanResponderGestureState
-    ) => {
-      numberInitialTouches = gestureState.numberActiveTouches;
-
-      if (gestureState.numberActiveTouches > 1) return;
-
-      longPressHandlerRef = setTimeout(onLongPress, delayLongPress);
-    },
     onStart: (
       event: GestureResponderEvent,
       gestureState: PanResponderGestureState
@@ -141,7 +116,6 @@ const usePanResponder = ({
 
       const tapTS = Date.now();
       // Handle double tap event by calculating diff between first and second taps timestamps
-
       isDoubleTapPerformed = Boolean(
         lastTapTS && tapTS - lastTapTS < DOUBLE_TAP_DELAY
       );
@@ -157,10 +131,10 @@ const usePanResponder = ({
               {
                 x:
                   initialTranslate.x +
-                  (SCREEN_WIDTH / 2 - touchX) * (targetScale / currentScale),
+                  (layout.width / 2 - touchX) * (targetScale / currentScale),
                 y:
                   initialTranslate.y +
-                  (SCREEN_HEIGHT / 2 - touchY) * (targetScale / currentScale),
+                  (layout.height / 2 - touchY) * (targetScale / currentScale),
               },
               targetScale
             );
@@ -200,17 +174,8 @@ const usePanResponder = ({
       event: GestureResponderEvent,
       gestureState: PanResponderGestureState
     ) => {
-      const { dx, dy } = gestureState;
-
-      if (Math.abs(dx) >= meaningfulShift || Math.abs(dy) >= meaningfulShift) {
-        cancelLongPressHandle();
-      }
-
       // Don't need to handle move because double tap in progress (was handled in onStart)
-      if (doubleTapToZoomEnabled && isDoubleTapPerformed) {
-        cancelLongPressHandle();
-        return;
-      }
+      if (doubleTapToZoomEnabled && isDoubleTapPerformed) return;
 
       if (
         numberInitialTouches === 1 &&
@@ -226,8 +191,6 @@ const usePanResponder = ({
         numberInitialTouches === 2 && gestureState.numberActiveTouches === 2;
 
       if (isPinchGesture) {
-        cancelLongPressHandle();
-
         const initialDistance = getDistanceBetweenTouches(initialTouches);
         const currentDistance = getDistanceBetweenTouches(
           event.nativeEvent.touches
@@ -274,6 +237,7 @@ const usePanResponder = ({
 
       if (isTapGesture && currentScale > initialScale) {
         const { x, y } = currentTranslate;
+        const { dx, dy } = gestureState;
         const [topBound, leftBound, bottomBound, rightBound] =
           getBounds(currentScale);
 
@@ -318,8 +282,6 @@ const usePanResponder = ({
       }
     },
     onRelease: () => {
-      cancelLongPressHandle();
-
       if (isDoubleTapPerformed) {
         isDoubleTapPerformed = false;
       }

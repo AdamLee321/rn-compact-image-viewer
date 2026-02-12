@@ -1,81 +1,62 @@
 // @ts-nocheck
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import {
   Animated,
-  ScrollView,
-  Dimensions,
-  StyleSheet,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  NativeMethodsMixin,
 } from 'react-native';
 
 import useImageDimensions from './hooks/useImageDimensions';
-import usePanResponder from './hooks/usePanResponder';
+import useZoomPanResponder from './hooks/useZoomPanResponder';
 
 import { getImageStyles, getImageTransform } from './utils';
-import { ImageSource } from './types';
-import { ImageLoading } from './ImageLoading';
+import { Dimensions, ImageSource } from './@types';
+import ImageLoading from './ImageLoading';
 
 const SWIPE_CLOSE_OFFSET = 75;
 const SWIPE_CLOSE_VELOCITY = 1.75;
-const SCREEN = Dimensions.get('window');
-const SCREEN_WIDTH = SCREEN.width;
-const SCREEN_HEIGHT = SCREEN.height;
 
 type Props = {
   imageSrc: ImageSource;
   onRequestClose: () => void;
   onZoom: (isZoomed: boolean) => void;
-  onLongPress: (image: ImageSource) => void;
-  delayLongPress: number;
   swipeToCloseEnabled?: boolean;
   doubleTapToZoomEnabled?: boolean;
-  swipeCloseSensitivity?: number; // 1 (hard) .. 10 (easy)
+  layout: Dimensions;
 };
 
-export const ImageItem = ({
+const ImageItem = ({
   imageSrc,
   onZoom,
   onRequestClose,
-  onLongPress,
-  delayLongPress,
   swipeToCloseEnabled = true,
   doubleTapToZoomEnabled = true,
-  swipeCloseSensitivity,
+  layout,
 }: Props) => {
-  const imageContainer = useRef<ScrollView & NativeMethodsMixin>(null);
+  const imageContainer = React.createRef();
   const imageDimensions = useImageDimensions(imageSrc);
-  const [translate, scale] = getImageTransform(imageDimensions, SCREEN);
+  const [translate, scale] = getImageTransform(imageDimensions, layout);
   const scrollValueY = new Animated.Value(0);
   const [isLoaded, setLoadEnd] = useState(false);
 
   const onLoaded = useCallback(() => setLoadEnd(true), []);
-  const onZoomPerformed = useCallback(
-    (isZoomed: boolean) => {
-      onZoom(isZoomed);
-      if (imageContainer?.current) {
-        imageContainer.current.setNativeProps({
-          scrollEnabled: !isZoomed,
-        });
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [imageContainer]
-  );
+  const onZoomPerformed = (isZoomed: boolean) => {
+    onZoom(isZoomed);
+    if (imageContainer?.current) {
+      // @ts-ignore
+      imageContainer.current.setNativeProps({
+        scrollEnabled: !isZoomed,
+      });
+    }
+  };
 
-  const onLongPressHandler = useCallback(() => {
-    onLongPress(imageSrc);
-  }, [imageSrc, onLongPress]);
-
-  const [panHandlers, scaleValue, translateValue] = usePanResponder({
+  const [panHandlers, scaleValue, translateValue] = useZoomPanResponder({
     initialScale: scale || 1,
     initialTranslate: translate || { x: 0, y: 0 },
     onZoom: onZoomPerformed,
     doubleTapToZoomEnabled,
-    onLongPress: onLongPressHandler,
-    delayLongPress,
+    layout,
   });
 
   const imagesStyles = getImageStyles(
@@ -95,34 +76,12 @@ export const ImageItem = ({
     const velocityY = nativeEvent?.velocity?.y ?? 0;
     const offsetY = nativeEvent?.contentOffset?.y ?? 0;
 
-    // Map sensitivity (1..10) to velocity threshold [low..high].
-    // Higher sensitivity => lower required velocity to close.
-    const s = swipeCloseSensitivity;
-    const velocityThreshold =
-      s == null
-        ? SWIPE_CLOSE_VELOCITY
-        : (() => {
-            const clamped = Math.max(1, Math.min(10, s));
-            const minV = 0.4; // easiest
-            const maxV = 2.5; // hardest
-            return maxV - ((clamped - 1) / 9) * (maxV - minV);
-          })();
-
-    const shouldClose =
-      (Math.abs(velocityY) > velocityThreshold &&
-        offsetY > SWIPE_CLOSE_OFFSET) ||
-      offsetY > SCREEN_HEIGHT / 2;
-
-    if (shouldClose) {
+    if (
+      Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY &&
+      offsetY > SWIPE_CLOSE_OFFSET
+    ) {
       onRequestClose();
-      return;
     }
-
-    // Not closing -> reset scroll position so image opacity returns to 1
-    if (imageContainer?.current) {
-      imageContainer.current.scrollTo({ y: 0, animated: true });
-    }
-    scrollValueY.setValue(0);
   };
 
   const onScroll = ({
@@ -133,15 +92,25 @@ export const ImageItem = ({
     scrollValueY.setValue(offsetY);
   };
 
+  const layoutStyle = React.useMemo(
+    () => ({
+      width: layout.width,
+      height: layout.height,
+    }),
+    [layout]
+  );
+
   return (
-    <ScrollView
+    <Animated.ScrollView
       ref={imageContainer}
-      style={styles.listItem}
+      style={layoutStyle}
       pagingEnabled
       nestedScrollEnabled
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.imageScrollContainer}
+      contentContainerStyle={{
+        height: layout.height * 2,
+      }}
       scrollEnabled={swipeToCloseEnabled}
       {...(swipeToCloseEnabled && {
         onScroll,
@@ -154,19 +123,9 @@ export const ImageItem = ({
         style={imageStylesWithOpacity}
         onLoad={onLoaded}
       />
-      {(!isLoaded || !imageDimensions) && <ImageLoading />}
-    </ScrollView>
+      {(!isLoaded || !imageDimensions) && <ImageLoading style={layoutStyle} />}
+    </Animated.ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  listItem: {
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-  },
-  imageScrollContainer: {
-    height: SCREEN_HEIGHT * 2,
-  },
-});
 
 export default React.memo(ImageItem);

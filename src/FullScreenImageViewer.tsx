@@ -7,7 +7,7 @@ import StatusBarManager from './StatusBarManager';
 
 import useAnimatedComponents from './hooks/useAnimatedComponents';
 import useRequestClose from './hooks/useRequestClose';
-import { ImageSource } from './types';
+import { ImageSource, Dimensions } from './types';
 
 export type Props = {
   imageSrc: ImageSource;
@@ -42,6 +42,10 @@ function ImageViewing({
 }: Props) {
   const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose);
   const [headerTransform] = useAnimatedComponents();
+  const [layout, setLayout] = React.useState<Dimensions>({
+    width: 0,
+    height: 0,
+  });
 
   if (!visible) {
     return null;
@@ -57,12 +61,30 @@ function ImageViewing({
       presentationStyle={presentationStyle}
       animationType={animationType}
       onRequestClose={onRequestCloseEnhanced}
-      supportedOrientations={['portrait', 'landscape']}
+      supportedOrientations={[
+        'portrait',
+        'portrait-upside-down',
+        'landscape',
+        'landscape-left',
+        'landscape-right',
+      ]}
       hardwareAccelerated
     >
       <StatusBarManager presentationStyle={presentationStyle} />
-      <View style={[styles.container, { opacity, backgroundColor }]}>
-        <Animated.View style={[styles.header, { transform: headerTransform }]}>
+      <View
+        style={[styles.container, { opacity, backgroundColor }]}
+        onLayout={(e) => {
+          setLayout(e.nativeEvent.layout);
+        }}
+      >
+        <Animated.View
+          style={[styles.header, { transform: headerTransform }]}
+          getItemLayout={(_, index) => ({
+            length: layout.width,
+            offset: layout.width * index,
+            index,
+          })}
+        >
           <ImageDefaultHeader onRequestClose={onRequestCloseEnhanced} />
         </Animated.View>
         <ImageItem
@@ -74,6 +96,7 @@ function ImageViewing({
           swipeToCloseEnabled={swipeToCloseEnabled}
           doubleTapToZoomEnabled={doubleTapToZoomEnabled}
           swipeCloseSensitivity={swipeCloseSensitivity}
+          layout={layout}
         />
       </View>
     </Modal>
