@@ -16,7 +16,7 @@ type Props = {
   actionButtonStyle?: StyleProp<ViewStyle>;
 };
 
-const HIT_SLOP = { top: 16, left: 16, bottom: 16, right: 16 };
+const HIT_SLOP = { top: 10, left: 10, bottom: 10, right: 10 };
 
 const ImageDefaultHeader = ({
   onRequestClose,
