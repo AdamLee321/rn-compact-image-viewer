@@ -42,11 +42,6 @@ const ImageItem = ({
   const onZoomPerformed = useCallback(
     (isZoomed: boolean) => {
       onZoom(isZoomed);
-      if (imageContainer?.current) {
-        imageContainer.current.setNativeProps({
-          scrollEnabled: !isZoomed,
-        });
-      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [imageContainer]
