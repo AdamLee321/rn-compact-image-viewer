@@ -33,7 +33,7 @@ export type Props = {
 };
 
 const DEFAULT_ANIMATION_TYPE = 'fade';
-const DEFAULT_BG_COLOR = '#000';
+const DEFAULT_BG_COLOR = '#fff';
 const DEFAULT_DELAY_LONG_PRESS = 800;
 
 function ImageViewing({
