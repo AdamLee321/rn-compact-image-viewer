@@ -11,9 +11,7 @@ export function App() {
         visible={visible}
         onRequestClose={() => setVisible(false)}
         imageSrc={{ uri: 'https://picsum.photos/800/1200' }}
-        swipeToCloseEnabled
         doubleTapToZoomEnabled
-        swipeCloseSensitivity={7}
       />
     </>
   );

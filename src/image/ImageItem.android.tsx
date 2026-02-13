@@ -7,13 +7,7 @@ import React, {
   useEffect,
 } from 'react';
 
-import {
-  Animated,
-  ScrollView,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  NativeMethodsMixin,
-} from 'react-native';
+import { Animated, ScrollView, NativeMethodsMixin } from 'react-native';
 
 import useImageDimensions from '../hooks/useImageDimensions';
 import usePanResponder from '../hooks/usePanResponder';
@@ -22,16 +16,11 @@ import { getImageStyles, getImageTransform } from '../utils';
 import { ImageSource, Dimensions } from '../@types';
 import ImageLoading from './ImageLoading';
 
-const SWIPE_CLOSE_OFFSET = 75;
-const SWIPE_CLOSE_VELOCITY = 1.75;
-
 type Props = {
   imageSrc: ImageSource;
-  onRequestClose: () => void;
   onZoom: (isZoomed: boolean) => void;
   onLongPress: (image: ImageSource) => void;
   delayLongPress: number;
-  swipeToCloseEnabled?: boolean;
   doubleTapToZoomEnabled?: boolean;
   layout: Dimensions;
 };
@@ -39,17 +28,14 @@ type Props = {
 const ImageItem = ({
   imageSrc,
   onZoom,
-  onRequestClose,
   onLongPress,
   delayLongPress,
-  swipeToCloseEnabled = false,
   doubleTapToZoomEnabled = true,
   layout,
 }: Props) => {
   const imageContainer = useRef<ScrollView & NativeMethodsMixin>(null);
   const imageDimensions = useImageDimensions(imageSrc);
   const [translate, scale] = getImageTransform(imageDimensions, layout);
-  const scrollValueY = new Animated.Value(0);
   const [isLoaded, setLoadEnd] = useState(false);
 
   const onLoaded = useCallback(() => setLoadEnd(true), []);
@@ -80,38 +66,11 @@ const ImageItem = ({
     layout,
   });
 
-  const imagesStyles = getImageStyles(
+  const imageStyles = getImageStyles(
     imageDimensions,
     translateValue,
     scaleValue
   );
-  const imageOpacity = scrollValueY.interpolate({
-    inputRange: [-SWIPE_CLOSE_OFFSET, 0, SWIPE_CLOSE_OFFSET],
-    outputRange: [0.7, 1, 0.7],
-  });
-  const imageStylesWithOpacity = { ...imagesStyles, opacity: imageOpacity };
-
-  const onScrollEndDrag = ({
-    nativeEvent,
-  }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const velocityY = nativeEvent?.velocity?.y ?? 0;
-    const offsetY = nativeEvent?.contentOffset?.y ?? 0;
-
-    if (
-      (Math.abs(velocityY) > SWIPE_CLOSE_VELOCITY &&
-        offsetY > SWIPE_CLOSE_OFFSET) ||
-      offsetY > layout.height / 2
-    ) {
-      onRequestClose();
-    }
-  };
-
-  const onScroll = ({
-    nativeEvent,
-  }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetY = nativeEvent?.contentOffset?.y ?? 0;
-    scrollValueY.setValue(offsetY);
-  };
 
   // Reset scroll position when layout changes
   useEffect(() => {
@@ -137,21 +96,16 @@ const ImageItem = ({
     <ScrollView
       ref={imageContainer}
       style={dynamicStyles.listItem}
-      pagingEnabled
       nestedScrollEnabled={false}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={dynamicStyles.imageScrollContainer}
-      scrollEnabled={swipeToCloseEnabled}
-      {...(swipeToCloseEnabled && {
-        onScroll,
-        onScrollEndDrag,
-      })}
+      scrollEnabled={false}
     >
       <Animated.Image
         {...panHandlers}
         source={imageSrc}
-        style={imageStylesWithOpacity}
+        style={imageStyles}
         onLoad={onLoaded}
       />
       {(!isLoaded || !imageDimensions) && <ImageLoading />}

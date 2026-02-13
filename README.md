@@ -1,6 +1,6 @@
 # Full Screen Image Viewer (React Native)
 
-Lightweight full-screen image viewer with pinch/double-tap zoom and swipe-to-close for React Native.
+Lightweight full-screen image viewer with pinch/double-tap zoom for React Native.
 
 ## Installation
 
