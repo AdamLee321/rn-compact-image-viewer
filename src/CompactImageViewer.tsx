@@ -39,6 +39,7 @@ export default function CompactImageViewer({
   backgroundColor,
   doubleTapToZoomEnabled,
   delayLongPress,
+  swipeCloseSensitivity,
   actionIcon,
   actionButtonStyle,
   onActionPress,
@@ -117,6 +118,7 @@ export default function CompactImageViewer({
         backgroundColor={backgroundColor}
         doubleTapToZoomEnabled={doubleTapToZoomEnabled}
         delayLongPress={delayLongPress}
+        swipeCloseSensitivity={swipeCloseSensitivity}
         actionIcon={actionIcon}
         actionButtonStyle={actionButtonStyle}
         onActionPress={onActionPress}

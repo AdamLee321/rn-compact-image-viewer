@@ -25,8 +25,10 @@ export type Props = {
   presentationStyle?: ModalProps['presentationStyle'];
   animationType?: ModalProps['animationType'];
   backgroundColor?: string;
+  swipeToCloseEnabled?: boolean;
   doubleTapToZoomEnabled?: boolean;
   delayLongPress?: number;
+  swipeCloseSensitivity?: number;
   actionIcon?: React.ReactNode;
   actionButtonStyle?: StyleProp<ViewStyle>;
   onActionPress?: () => void;
@@ -44,8 +46,10 @@ function ImageViewing({
   animationType = DEFAULT_ANIMATION_TYPE,
   backgroundColor = DEFAULT_BG_COLOR,
   presentationStyle,
+  swipeToCloseEnabled,
   doubleTapToZoomEnabled,
   delayLongPress = DEFAULT_DELAY_LONG_PRESS,
+  swipeCloseSensitivity,
   actionIcon,
   actionButtonStyle,
   onActionPress,
@@ -118,9 +122,12 @@ function ImageViewing({
         <ImageItem
           onZoom={() => {}}
           imageSrc={normalizedSrc}
+          onRequestClose={onRequestCloseEnhanced}
           onLongPress={onLongPress}
           delayLongPress={delayLongPress}
+          swipeToCloseEnabled={swipeToCloseEnabled}
           doubleTapToZoomEnabled={doubleTapToZoomEnabled}
+          swipeCloseSensitivity={swipeCloseSensitivity}
           layout={layout}
         />
       </View>
@@ -131,7 +138,7 @@ function ImageViewing({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
   },
   header: {
     position: 'absolute',
