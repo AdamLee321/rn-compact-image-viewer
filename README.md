@@ -15,15 +15,12 @@ yarn add rn-compact-image-viewer
 - react: >=18
 - react-native: >=0.72
 
-## Quick start
+## Compact Image Viewer
 
 ```tsx
 import { useState } from 'react';
 import { Button } from 'react-native';
-import {
-  CompactImageViewer,
-  FullScreenImageViewer,
-} from 'rn-compact-image-viewer';
+import { CompactImageViewer } from 'rn-compact-image-viewer';
 
 function Example() {
   const [visible, setVisible] = useState(false);
@@ -43,6 +40,22 @@ function Example() {
         }}
         doubleTapToZoomEnabled
       />
+    </>
+  );
+}
+```
+
+## Quick start
+
+```tsx
+import { useState } from 'react';
+import { Button } from 'react-native';
+import { FullScreenImageViewer } from 'rn-compact-image-viewer';
+
+function Example() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
       <Button title="Open" onPress={() => setVisible(true)} />
       <FullScreenImageViewer
         visible={visible}
