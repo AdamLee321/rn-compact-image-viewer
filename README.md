@@ -21,22 +21,27 @@ yarn add rn-compact-image-viewer
 import { useState } from 'react';
 import { Button } from 'react-native';
 import { CompactImageViewer } from 'rn-compact-image-viewer';
+import OctIcon from 'react-native-vector-icons/Octicons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 function Example() {
   const [visible, setVisible] = useState(false);
+  const image = 'https://picsum.photos/800/1200';
   return (
     <>
       <CompactImageViewer
-        imageSrc={eventImage}
-        visible={fullscreenImageVisible}
-        fullscreenButtonIcon={<Icon name="fullscreen" size={20} color="#fff" />}
+        imageSrc={image}
+        visible={visible}
+        fullscreenButtonIcon={
+          <MaterialIcon name="fullscreen" size={20} color="#fff" />
+        }
         actionIcon={<OctIcon name="download" size={20} color="#fff" />}
-        onActionPress={() => handleSnapshot(event)}
+        onActionPress={() => handleDownload(image)}
         onRequestClose={() => {
-          setFullscreenImageVisible(false);
+          setVisible(false);
         }}
         onFullscreenPress={() => {
-          setFullscreenImageVisible(true);
+          setVisible(true);
         }}
         doubleTapToZoomEnabled
       />
