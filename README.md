@@ -1,6 +1,6 @@
 # Full Screen Image Viewer (React Native)
 
-Lightweight full-screen image viewer with pinch/double-tap zoom for React Native.
+Lightweight full-screen image viewer with pinch/double-tap zoom for React Native with orientation support.
 
 ## Installation
 
@@ -20,12 +20,29 @@ yarn add rn-compact-image-viewer
 ```tsx
 import { useState } from 'react';
 import { Button } from 'react-native';
-import { FullScreenImageViewer } from 'rn-compact-image-viewer';
+import {
+  CompactImageViewer,
+  FullScreenImageViewer,
+} from 'rn-compact-image-viewer';
 
 function Example() {
   const [visible, setVisible] = useState(false);
   return (
     <>
+      <CompactImageViewer
+        imageSrc={eventImage}
+        visible={fullscreenImageVisible}
+        fullscreenButtonIcon={<Icon name="fullscreen" size={20} color="#fff" />}
+        actionIcon={<OctIcon name="download" size={20} color="#fff" />}
+        onActionPress={() => handleSnapshot(event)}
+        onRequestClose={() => {
+          setFullscreenImageVisible(false);
+        }}
+        onFullscreenPress={() => {
+          setFullscreenImageVisible(true);
+        }}
+        doubleTapToZoomEnabled
+      />
       <Button title="Open" onPress={() => setVisible(true)} />
       <FullScreenImageViewer
         visible={visible}
@@ -49,7 +66,6 @@ function Example() {
 - **backgroundColor?**: Background color. Default: `"#000"`.
 - **doubleTapToZoomEnabled?**: Enable double tap to zoom.
 - **delayLongPress?**: Long-press delay (ms). Default: `800`.
-- **supportOrientations?**: Model supported orientations `["portrait", "landscape"]`. Default `["portrait"]`.
 
 ## TypeScript
 
