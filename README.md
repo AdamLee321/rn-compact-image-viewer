@@ -45,7 +45,7 @@ function Example() {
 }
 ```
 
-## Quick start
+## Full Screen Image Viewer
 
 ```tsx
 import { useState } from 'react';
