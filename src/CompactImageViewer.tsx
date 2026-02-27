@@ -67,8 +67,6 @@ export default function CompactImageViewer({
     !!actionIcon &&
     typeof onActionPress === 'function';
 
-  console.log('compactHeight', compactHeight);
-
   return (
     <>
       <View
